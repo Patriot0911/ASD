@@ -273,35 +273,6 @@ float** TransposeMatrix(float** A, int N){
     return arr;
 }
 
-float** stronglyConnected(float** A, int N) {
-    float** Tarr = TransposeMatrix(A, N);
-    float** Rarr = CreateReachabilityMatrix(Tarr, N);
-    int* visited = (int*)malloc(N * sizeof(int));
-    float** arr =  (float**)malloc(N * sizeof(float*));
-    for(int i = 0; i < N; i++){
-        arr[i] = (float*)malloc(N * sizeof(float));
-        visited[i] = 0;
-        for(int l = 0; l < N; l++){
-            arr[i][l] = 0;
-        }
-    }
-    for (int i = 0; i < N; i++) {
-        if (visited[i]) {
-            continue;
-        }
-        for (int j = 0; j < N; j++) {
-            if (Rarr[i][j] && Rarr[j][i]) {
-                arr[i][j] = 1;
-                visited[j] = 1;
-            }
-        }
-    }
-    free(Rarr);
-    free(Tarr);
-    free(visited);
-    return arr;
-}
-
 float** multMatrix(float** A, float** B, int N){
     float** arr = (float**)malloc(N * sizeof(float*));
     for(int i = 0; i < N; i++){
@@ -327,5 +298,18 @@ float** powerMatrix(float** A, int power, int N){
     for(int k = 1; k < power; k++){
         arr = multMatrix(arr, A, N);
     }
+    return arr;
+}
+
+float** stronglyConnected(float** A, int N) {
+    float** Rarr = CreateReachabilityMatrix(A, N);
+    float** Tarr = TransposeMatrix(Rarr, N);
+    float** arr =  (float**)malloc(N * sizeof(float*));
+    for(int i = 0; i < N; i++){
+        arr[i] = (float*)malloc(N * sizeof(float));
+    }
+    arr = multMatrix(Rarr, Tarr, N);
+    free(Rarr);
+    free(Tarr);
     return arr;
 }
