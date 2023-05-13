@@ -301,15 +301,69 @@ float** powerMatrix(float** A, int power, int N){
     return arr;
 }
 
-float** stronglyConnected(float** A, int N) {
-    float** Rarr = CreateReachabilityMatrix(A, N);
-    float** Tarr = TransposeMatrix(Rarr, N);
-    float** arr =  (float**)malloc(N * sizeof(float*));
-    for(int i = 0; i < N; i++){
-        arr[i] = (float*)malloc(N * sizeof(float));
+int DFS(int f, int N, float** Rarr, int top) {
+    d_visited[f] = 1;
+    for(int i = 0; i < N; i++) {
+        if(Rarr[f][i] && !Rarr[i]) {
+            DFS(i, N, Rarr, top);
+        }
     }
-    arr = multMatrix(Rarr, Tarr, N);
+    stack[++top] = f;
+    return top;
+}
+
+void ReverseDFS(int v, int N, int num_components, float** Rarr) {
+    d_visited[v] = 1;
+    components[v] = num_components;
+    for(int i = 0; i < N; i++) {
+        if(Rarr[i][v] && !d_visited[i]) {
+            ReverseDFS(i, N, num_components, Rarr);
+        }
+    }
+}
+
+int stronglyConnected(HWND hWnd, HDC hdc, float** A, int N) {
+    float** Rarr = CreateReachabilityMatrix(A, N);
+    int  num_components = 0,
+        f,
+        top = -1;
+    components = (int*)malloc(N * sizeof(int));
+    d_visited = (int*)malloc(N * sizeof(int));
+    stack = (int*)malloc(N * sizeof(int));
+    for(int i = 0; i < N; i++){
+        d_visited[i] = 0;
+        components[i] = -1;
+    }
+    for(int i = 0; i < N; i++) {
+        if(!d_visited[i]){
+            top = DFS(i, N, Rarr, top);
+        }
+    }
+    float** Tarr = TransposeMatrix(Rarr, N);
+    for(int i = 0; i < N; i++) {
+        d_visited[i] = 0;
+    }
+
+    while(top >= 0) {
+        f = stack[top--];
+        if(!d_visited[f]) {
+            ReverseDFS(f, N, num_components, Rarr);
+            num_components++;
+        }
+    }
+    printf("The strongly connected components of the graph are:\n");
+    for(int i = 0; i < num_components; i++) {
+        printf("{ ");
+        for(int j = 0; j < N; j++) {
+            if(components[j] == i) {
+                printf("%d ", j+1);
+            }
+        }
+        printf("}\n");
+    }
     free(Rarr);
     free(Tarr);
-    return arr;
+    free(d_visited);
+    free(stack);
+    return num_components;
 }

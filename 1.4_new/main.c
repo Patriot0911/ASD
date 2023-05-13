@@ -8,24 +8,23 @@
 #include "utils/draw.c"
 
 
-void StronglyConnectedMatrix(HWND hWnd, HDC hdc){
+void StronglyConnectedComponents(HWND hWnd, HDC hdc){
     float k = (1.0 - (int)(num_in_group/10)*0.005 - (int)(num_in_group%10)*0.005 - 0.27);
     float** A = createMatrixPreset(k, MATRIX_MAX);
-    float** Astrong = stronglyConnected(A, MATRIX_MAX);
     int** Acoords = graphCoords(A, 300, MATRIX_MAX);
     char** Anames = getNames(MATRIX_MAX);
-    printMatrix(Astrong, MATRIX_MAX);
     DrawGraph(hWnd, hdc, A, Acoords, MATRIX_MAX, 1, Anames);
-
-    ColorConden(hWnd, hdc, A, Acoords, Astrong, Anames, MATRIX_MAX);
-
+    int count = stronglyConnected(hWnd, hdc, A, MATRIX_MAX);
+    ColorPeaks(hWnd, hdc, MATRIX_MAX, Anames, Acoords, count);
     free(A);
     free(Acoords);
-    free(Astrong);
     free(Anames);
+    free(components);
 }
 
-void AccessMatrix( ){
+
+
+void ReachMatrix( ){
     float k = (1.0 - (int)(num_in_group/10)*0.005 - (int)(num_in_group%10)*0.005 - 0.27);
     float** A = createMatrixPreset(k, MATRIX_MAX);
     float** AAccess = CreateReachabilityMatrix(A, MATRIX_MAX); // todo
@@ -225,7 +224,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
                     case 5:
                         if(graph == 3){
                             system("cls");
-                            AccessMatrix( );
+                            ReachMatrix( );
                         }else{
                             printf("\nMake Mod Graph first");
                         }
@@ -234,7 +233,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
                         system("cls");
                         hdc = BeginPaint(hWnd, &ps);
                         ClearScreen(hdc, hWnd, ps);
-                        StronglyConnectedMatrix(hWnd, hdc);
+                        StronglyConnectedComponents(hWnd, hdc);
                         EndPaint(hWnd, &ps);
                         graph = 4;
                     break;

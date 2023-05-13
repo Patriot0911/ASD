@@ -17,3 +17,8 @@ const int MATRIX_MAX = (int)(num_in_group/10)+10,
     SEED = group_num*100+num_in_group;
 int lastbutton = 0,
     graph = 0;
+
+/* For components of Strongly Connection (bad realization)*/
+int* d_visited;
+int* stack;
+int* components;

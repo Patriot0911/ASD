@@ -16,21 +16,6 @@ void arrow(float fi, int px, int py, HDC hdc){
     LineTo(hdc, rx, ry);
 }
 
-void ColorPeaks(HWND hWnd, HDC hdc, int N, char** Anames, int** Acoords, int count){
-    int r = 30, dtx = 8;
-    HPEN Pen;
-    for(int i = 0; i < count; i++){
-        Pen = CreatePen(PS_SOLID, 2, RGB(50*(i+1), 50*(i+1), 20*(i+1))); 
-        SelectObject(hdc, Pen);
-        for(int l = 0; l < N; l++){
-            if(components[l] == i){
-                MoveToEx(hdc, Acoords[l][0], Acoords[l][1], NULL);
-                Ellipse(hdc, Acoords[l][0]-r+(i+1)*4, Acoords[l][1]-r+(i+1)*4, Acoords[l][0]+r-(i+1)*4, Acoords[l][1]+r-(i+1)*4);
-            }
-        }
-    }
-}
-
 void DrawGraph(HWND hWnd, HDC hdc, float** A, int** Acoords, int N, int dir, char** Anames){
     HPEN BPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255));
     HPEN KPen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));
