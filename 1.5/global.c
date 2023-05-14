@@ -11,4 +11,6 @@ int lastbutton = 0;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-HWND Button_matrix_dir;
+HWND Button_matrix_dir,
+    Button_dfs_graph,
+    Button_bfs_graph;
