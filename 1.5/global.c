@@ -7,10 +7,10 @@ char ProgName[] = "Лабораторна робота 5";
 
 const int MATRIX_MAX = (int)(num_in_group/10)+10,
     SEED = group_num*100+num_in_group;
-int lastbutton = 0;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 HWND Button_matrix_dir,
     Button_dfs_graph,
+    Button_dfs_graph_next,
     Button_bfs_graph;

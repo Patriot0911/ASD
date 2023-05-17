@@ -16,6 +16,7 @@ void StronglyConnectedComponents(HWND hWnd, HDC hdc){
     DrawGraph(hWnd, hdc, A, Acoords, MATRIX_MAX, 1, Anames);
     int count = stronglyConnected(hWnd, hdc, A, MATRIX_MAX);
     ColorPeaks(hWnd, hdc, MATRIX_MAX, Anames, Acoords, count);
+    TextOut(hdc, startx-40, starty-starty/1.5, "Condensation graph", 18);
     free(A);
     free(Acoords);
     free(Anames);
@@ -27,7 +28,7 @@ void StronglyConnectedComponents(HWND hWnd, HDC hdc){
 void ReachMatrix( ){
     float k = (1.0 - (int)(num_in_group/10)*0.005 - (int)(num_in_group%10)*0.005 - 0.27);
     float** A = createMatrixPreset(k, MATRIX_MAX);
-    float** AAccess = CreateReachabilityMatrix(A, MATRIX_MAX); // todo
+    float** AAccess = CreateReachabilityMatrix(A, MATRIX_MAX);
     printMatrix(AAccess, MATRIX_MAX);
 
     free(AAccess);

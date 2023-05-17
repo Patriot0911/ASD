@@ -1,4 +1,22 @@
 
+void PrintSingleMatrix(int* A){
+    printf("{ ");
+    for(int i = 0; i < MATRIX_MAX; i++){
+        printf("%d ", A[i]);
+    }
+    printf("}");
+}
+
+int PutToEnd(int* stack, int N, int a){
+    for(int i = 0; i < N; i++){
+        if(stack[i] == -1){
+            stack[i] = a;
+            return i;
+        }
+    }
+    return -1;
+}
+
 float** createMatrixPreset(float k, int N){
     srand(SEED);
     float** arr = (float**)malloc(N * sizeof(float*));
