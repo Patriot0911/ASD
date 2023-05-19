@@ -3,6 +3,8 @@
 #define startx          500
 #define starty          500
 
+#define sradius         30
+
 char ProgName[] = "Лабораторна робота 5";
 
 const int MATRIX_MAX = (int)(num_in_group/10)+10,

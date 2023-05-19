@@ -13,7 +13,7 @@ void DrawMainGraph(HWND hWnd, HDC hdc, int print)
     float k = (1.0 - (int)(num_in_group/10)*0.01 - (int)(num_in_group%10)*0.005 - 0.15);
     char** Anames = getNames(MATRIX_MAX);
     float** A = createMatrixPreset(k, MATRIX_MAX);
-    int** Acoords = graphCoords(A, 300, MATRIX_MAX);
+    int** Acoords = graphCoords(300, MATRIX_MAX);
     if(print){
         printMatrix(A, MATRIX_MAX);
     }
@@ -153,10 +153,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
                     InvalidateRect(hWnd, NULL, TRUE);
                     hdc = BeginPaint(hWnd, &ps);
                     point = DFSGraph(hWnd, hdc, point, visited, stack);
-                    EndPaint(hWnd, &ps);
                     if(point == -1){
                         printf("Cannot continue DFS\n");
+                        ColorPeaks(hWnd, hdc, stack[MATRIX_MAX-1], MATRIX_MAX, 0);
+                        NamePeaks(hWnd, hdc, MATRIX_MAX);
                     }
+                    EndPaint(hWnd, &ps);
                     PrintSingleMatrix(stack);
                 break;
 
@@ -186,10 +188,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
                     InvalidateRect(hWnd, NULL, TRUE);
                     hdc = BeginPaint(hWnd, &ps);
                     point = BFSGraph(hWnd, hdc, point, visited, stack);
-                    EndPaint(hWnd, &ps);
                     if(point == -1){
                         printf("Cannot continue BFS\n");
+                        ColorPeaks(hWnd, hdc, -1, MATRIX_MAX, 0);
+                        NamePeaks(hWnd, hdc, MATRIX_MAX);
                     }
+                    EndPaint(hWnd, &ps);
                     PrintSingleMatrix(stack);
                 break;
                 default:

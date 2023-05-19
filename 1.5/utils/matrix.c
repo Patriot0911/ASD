@@ -66,7 +66,7 @@ char** getNames(int N){
     return Anames;
 }
 
-int** graphCoords(float** A, float a, int N){
+int** graphCoords(float a, int N){
     int** Acoords = (int**)malloc(N * sizeof(int*));
     float leng = a/(2*sin(180/(N-1)));
 

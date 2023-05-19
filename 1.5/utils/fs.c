@@ -19,6 +19,8 @@ int DFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hd
                         if(A[stack[i]][l] && !visited[l]){
                             printf("\n%d -> %d\n", stack[i], l);
                             DrawLined(hWnd, hdc, A, N, stack[i], l);
+                            ColorPeaks(hWnd, hdc, stack[i], N, 0);
+                            ColorPeaks(hWnd, hdc, l, N, 1);
                             visited[l] = 1;
                             PutToEnd(stack, N, l);
                             return l;
@@ -31,6 +33,8 @@ int DFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hd
                     if(A[begin][l] && !visited[l]){
                         printf("\n%d -> %d\n", begin, l);
                         DrawLined(hWnd, hdc, A, N, begin, l);
+                        ColorPeaks(hWnd, hdc, begin, N, 0);
+                        ColorPeaks(hWnd, hdc, l, N, 1);
                         visited[l] = 1;
                         PutToEnd(stack, N, l);
                         return l;
@@ -43,6 +47,9 @@ int DFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hd
                             if(A[stack[i]][l] && !visited[l]){
                                 printf("\n%d -> %d\n", stack[i], l);
                                 DrawLined(hWnd, hdc, A, N, stack[i], l);
+                                ColorPeaks(hWnd, hdc, begin, N, 0);
+                                ColorPeaks(hWnd, hdc, stack[i], N, 0);
+                                ColorPeaks(hWnd, hdc, l, N, 1);
                                 visited[l] = 1;
                                 PutToEnd(stack, N, l);
                                 return l;
@@ -62,6 +69,8 @@ int DFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hd
                 DrawLined(hWnd, hdc, A, N, begin, i);
                 visited[i] = 1;
                 PutToEnd(stack, N, i);
+                ColorPeaks(hWnd, hdc, begin, N, 0);
+                ColorPeaks(hWnd, hdc, i, N, 1);
                 return i;
             }
         }
@@ -75,6 +84,8 @@ int BFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hd
             if(A[begin][i] && !visited[i]){
                 printf("\n%d -> %d\n", begin, i);
                 DrawLined(hWnd, hdc, A, N, begin, i);
+                ColorPeaks(hWnd, hdc, begin, N, 1);
+                ColorPeaks(hWnd, hdc, i, N, 0);
                 visited[i] = 1;
                 PutToEnd(stack, N, i);
                 return begin;
@@ -86,6 +97,9 @@ int BFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hd
                 if(A[i][l] && !visited[l]){
                     printf("\n%d -> %d\n", i, l);
                     DrawLined(hWnd, hdc, A, N, i, l);
+                    ColorPeaks(hWnd, hdc, begin, N, 0);
+                    ColorPeaks(hWnd, hdc, i, N, 1);
+                    ColorPeaks(hWnd, hdc, l, N, 0);
                     visited[l] = 1;
                     PutToEnd(stack, N, i);
                     return i;
@@ -96,8 +110,10 @@ int BFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hd
             if(visited[i] || i == begin) continue;
             for(int l = 0; l < N; l++){
                 if(A[i][l] && !visited[l]){
-                    printf("\n%d -> %d\n", i, l);
+                    printf("\n%d -> %d\n222", i, l);
                     DrawLined(hWnd, hdc, A, N, i, l);
+                    ColorPeaks(hWnd, hdc, i, N, 1);
+                    ColorPeaks(hWnd, hdc, l, N, 0);
                     visited[l] = 1;
                     PutToEnd(stack, N, i);
                     return i;
@@ -109,6 +125,7 @@ int BFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hd
                 }
             }
             printf("\n%d -> %d\n", i, i);
+            ColorPeaks(hWnd, hdc, i, N, 0);
             PutToEnd(stack, N, i);
             return i;
         }
@@ -117,6 +134,8 @@ int BFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hd
         for(int l = 0; l < MATRIX_MAX; l++){
             if(A[begin][l] && !visited[l]){
                 printf("\n%d -> %d\n", begin, l);
+                ColorPeaks(hWnd, hdc, begin, N, 1);
+                ColorPeaks(hWnd, hdc, l, N, 0);
                 DrawLined(hWnd, hdc, A, N, begin, l);
                 visited[l] = 1;
                 PutToEnd(stack, N, l);
