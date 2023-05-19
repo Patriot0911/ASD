@@ -68,3 +68,61 @@ int DFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hd
     }
     return -1;
 }
+
+int BFS(int begin, int* visited, int* stack, float** A, int N, HWND hWnd, HDC hdc) {
+    if(visited[begin]){
+        for(int i = 0; i < N; i++){
+            if(A[begin][i] && !visited[i]){
+                printf("\n%d -> %d\n", begin, i);
+                DrawLined(hWnd, hdc, A, N, begin, i);
+                visited[i] = 1;
+                PutToEnd(stack, N, i);
+                return begin;
+            }
+        }
+        for(int i = 0; i < N; i++){
+            if(i == begin || !visited[i]) continue;
+            for(int l = 0; l < N; l++){
+                if(A[i][l] && !visited[l]){
+                    printf("\n%d -> %d\n", i, l);
+                    DrawLined(hWnd, hdc, A, N, i, l);
+                    visited[l] = 1;
+                    PutToEnd(stack, N, i);
+                    return i;
+                }
+            }
+        }
+        for(int i = 0; i < N; i++){
+            if(visited[i] || i == begin) continue;
+            for(int l = 0; l < N; l++){
+                if(A[i][l] && !visited[l]){
+                    printf("\n%d -> %d\n", i, l);
+                    DrawLined(hWnd, hdc, A, N, i, l);
+                    visited[l] = 1;
+                    PutToEnd(stack, N, i);
+                    return i;
+                }
+            }
+            for(int k = 0; k < N; k++){
+                if(A[k][i]){
+                    break;
+                }
+            }
+            printf("\n%d -> %d\n", i, i);
+            PutToEnd(stack, N, i);
+            return i;
+        }
+    }else{
+        visited[begin] = 1;
+        for(int l = 0; l < MATRIX_MAX; l++){
+            if(A[begin][l] && !visited[l]){
+                printf("\n%d -> %d\n", begin, l);
+                DrawLined(hWnd, hdc, A, N, begin, l);
+                visited[l] = 1;
+                PutToEnd(stack, N, l);
+                return begin;
+            }
+        }
+    }
+    return -1;
+}

@@ -24,17 +24,14 @@ void DrawMainGraph(HWND hWnd, HDC hdc, int print)
 }
 
 
-int* BFS(int begin, int* visited, float** A, int N) {
-
-}
-int BFSGraph(HWND hWnd, HDC hdc, int begin, int* visited, int* stack){
+int BFSGraph(HWND hWnd, HDC hdc, int begin, int* visited, int* stack)
 {
     float k = (1.0 - (int)(num_in_group/10)*0.01 - (int)(num_in_group%10)*0.005 - 0.15);
     float** A = createMatrixPreset(k, MATRIX_MAX);
     printMatrix(A, MATRIX_MAX);
     printf("DFS:\n");
-    // int next = BFS(begin, visited, stack, A, MATRIX_MAX, hWnd, hdc);
-
+    int next = BFS(begin, visited, stack, A, MATRIX_MAX, hWnd, hdc);
+    
     free(A);
     return next;
 }
@@ -89,6 +86,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
     static int* visited = NULL;
     static int* stack = NULL;
     static int point = -1;
+    static int graph = -1;
     switch(messg){
         case WM_CREATE:
             visited = (int*)malloc(MATRIX_MAX * sizeof(int));
@@ -128,6 +126,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
                     DrawMainGraph(hWnd, hdc, 1);
                     EndPaint(hWnd, &ps);
                     point = -1;
+                    graph = 0;
                 break;
                 case 2:
                     for(int i = 0; i < MATRIX_MAX; i++){
@@ -142,8 +141,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
                     point = DFSGraph(hWnd, hdc, 0, visited, stack);
                     EndPaint(hWnd, &ps);
                     PrintSingleMatrix(stack);
+                    graph = 1;
                 break;
                 case 3:
+                    if(graph != 1) break;
                     system("cls");
                     if(point == -1){
                         printf("Cannot continue DFS\n");
@@ -172,6 +173,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
                     DrawMainGraph(hWnd, hdc, 0);
                     point = BFSGraph(hWnd, hdc, 0, visited, stack);
                     EndPaint(hWnd, &ps);
+                    PrintSingleMatrix(stack);
+                    graph = 2;
+                break;
+                case 5:
+                    if(graph != 2) break;
+                    system("cls");
+                    if(point == -1){
+                        printf("Cannot continue BFS\n");
+                        break;
+                    }
+                    InvalidateRect(hWnd, NULL, TRUE);
+                    hdc = BeginPaint(hWnd, &ps);
+                    point = BFSGraph(hWnd, hdc, point, visited, stack);
+                    EndPaint(hWnd, &ps);
+                    if(point == -1){
+                        printf("Cannot continue BFS\n");
+                    }
                     PrintSingleMatrix(stack);
                 break;
                 default:
