@@ -13,4 +13,5 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HWND Button_matrix_dir,
     Button_dfs_graph,
     Button_dfs_graph_next,
-    Button_bfs_graph;
+    Button_bfs_graph,
+    Button_bfs_graph_next;

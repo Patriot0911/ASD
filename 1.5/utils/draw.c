@@ -16,6 +16,20 @@ void arrow(float fi, int px, int py, HDC hdc){
     LineTo(hdc, rx, ry);
 }
 
+void DrawLined(HWND hWnd, HDC hdc, float** A, int N, int begin, int end){
+    int** Acoords = graphCoords(A, 300, MATRIX_MAX);
+    float val = 92* M_PI /180;
+    int r = 30;
+    HPEN RPen = CreatePen(PS_SOLID, 4, RGB(250, 0, 150));
+    SelectObject(hdc, RPen);
+    val = (atan2((Acoords[end][1]-Acoords[begin][1]), (Acoords[end][0]-Acoords[begin][0])));
+    MoveToEx(hdc, Acoords[begin][0], Acoords[begin][1], NULL);
+    LineTo(hdc, (int)(Acoords[end][0]-r*cos(val)), (int)(Acoords[end][1]-r*sin(val)));
+    arrow(val, (int)(Acoords[end][0]-r*cos(val)), (int)(Acoords[end][1]-r*sin(val)), hdc);
+    val = 92*M_PI/180;
+    free(Acoords);
+}
+
 void DrawGraph(HWND hWnd, HDC hdc, float** A, int** Acoords, int N, int dir, char** Anames){
     HPEN BPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255));
     HPEN KPen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));
