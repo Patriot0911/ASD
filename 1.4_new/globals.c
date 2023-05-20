@@ -4,6 +4,7 @@ char ProgName[] = "Лабораторна робота 4";
 #define num_in_group    17
 #define startx          500
 #define starty          500
+#define sradius         30
 
 HWND Button_matrix_dir, 
     Button_matrix_undir, 
@@ -15,8 +16,6 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 const int MATRIX_MAX = (int)(num_in_group/10)+10, 
     SEED = group_num*100+num_in_group;
-int lastbutton = 0,
-    graph = 0;
 
 /* For components of Strongly Connection (bad realization)*/
 int* d_visited;

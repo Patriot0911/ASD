@@ -16,7 +16,7 @@ void DrawMainGraph(HWND hWnd, HDC hdc, int dir)
     if(!dir){
         A = symMatrix(A, MATRIX_MAX);
     }
-    int** Acoords = graphCoords(A, 300, MATRIX_MAX);
+    int** Acoords = graphCoords(300, MATRIX_MAX);
     printMatrix(A, MATRIX_MAX);
 
     DrawGraph(hWnd, hdc, A, Acoords, MATRIX_MAX, dir, Anames);
@@ -62,6 +62,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
     HDC hdc;
     PAINTSTRUCT ps;
+    static int lastbutton = 0;
     switch(messg){
         case WM_CREATE:
             Button_matrix_dir = CreateWindow("BUTTON", "Directed Matrix [1]",

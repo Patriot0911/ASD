@@ -11,7 +11,7 @@
 void StronglyConnectedComponents(HWND hWnd, HDC hdc){
     float k = (1.0 - (int)(num_in_group/10)*0.005 - (int)(num_in_group%10)*0.005 - 0.27);
     float** A = createMatrixPreset(k, MATRIX_MAX);
-    int** Acoords = graphCoords(A, 300, MATRIX_MAX);
+    int** Acoords = graphCoords(300, MATRIX_MAX);
     char** Anames = getNames(MATRIX_MAX);
     DrawGraph(hWnd, hdc, A, Acoords, MATRIX_MAX, 1, Anames);
     int count = stronglyConnected(hWnd, hdc, A, MATRIX_MAX);
@@ -75,7 +75,7 @@ void DrawModGraph(HWND hWnd, HDC hdc){
     int* degA;
     int* degAout;
     char** Anames = getNames(MATRIX_MAX);
-    int** Acoords = graphCoords(A, 300, MATRIX_MAX);
+    int** Acoords = graphCoords(300, MATRIX_MAX);
     printMatrix(A, MATRIX_MAX);
 
     degAout = degMatrixOut(A, MATRIX_MAX, hdc, Anames);
@@ -108,7 +108,7 @@ void DrawMainGraph(HWND hWnd, HDC hdc, int dir)
         checkRegularbyIn(degA, MATRIX_MAX, hdc);
         findSingalorIsolatedbyInOut(degA, degAout, MATRIX_MAX, hdc, Anames);
     }
-    int** Acoords = graphCoords(A, 300, MATRIX_MAX);
+    int** Acoords = graphCoords(300, MATRIX_MAX);
     printMatrix(A, MATRIX_MAX);
 
     DrawGraph(hWnd, hdc, A, Acoords, MATRIX_MAX, dir, Anames);
@@ -156,6 +156,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
     HDC hdc;
     PAINTSTRUCT ps;
+    static int lastbutton = 0;
+    static int graph = 0;
     switch(messg){
         case WM_CREATE:
             Button_matrix_dir = CreateWindow("BUTTON", "Directed Matrix [1]",
