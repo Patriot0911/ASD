@@ -148,18 +148,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
                     system("cls");
                     if(point == -1){
                         printf("Cannot continue DFS\n");
+                        for(int i = 0; i < MATRIX_MAX; i++){
+                            printf("Num: %d | Node: %d\n", i+1, stack[i]+1);
+                        }                        
                         break;
                     }
                     InvalidateRect(hWnd, NULL, TRUE);
                     hdc = BeginPaint(hWnd, &ps);
                     point = DFSGraph(hWnd, hdc, point, visited, stack);
+                    PrintSingleMatrix(stack);
                     if(point == -1){
-                        printf("Cannot continue DFS\n");
+                        printf("\nCannot continue DFS\n");
                         ColorPeaks(hWnd, hdc, stack[MATRIX_MAX-1], MATRIX_MAX, 0);
                         NamePeaks(hWnd, hdc, MATRIX_MAX);
+                        for(int i = 0; i < MATRIX_MAX; i++){
+                            printf("Num: %d | Node: %d\n", i+1, stack[i]+1);
+                        }
                     }
                     EndPaint(hWnd, &ps);
-                    PrintSingleMatrix(stack);
                 break;
 
                 /* BFS */
@@ -183,18 +189,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam){
                     system("cls");
                     if(point == -1){
                         printf("Cannot continue BFS\n");
+                        for(int i = 0; i < MATRIX_MAX; i++){
+                            printf("Num: %d | Node: %d\n", i+1, stack[i]+1);
+                        }                        
                         break;
                     }
                     InvalidateRect(hWnd, NULL, TRUE);
                     hdc = BeginPaint(hWnd, &ps);
                     point = BFSGraph(hWnd, hdc, point, visited, stack);
+                    PrintSingleMatrix(stack);
                     if(point == -1){
-                        printf("Cannot continue BFS\n");
+                        printf("\nCannot continue BFS\n");
                         ColorPeaks(hWnd, hdc, -1, MATRIX_MAX, 0);
                         NamePeaks(hWnd, hdc, MATRIX_MAX);
+                        for(int i = 0; i < MATRIX_MAX; i++){
+                            printf("Num: %d | Node: %d\n", i+1, stack[i]+1);
+                        }                        
                     }
                     EndPaint(hWnd, &ps);
-                    PrintSingleMatrix(stack);
                 break;
                 default:
                 break;
