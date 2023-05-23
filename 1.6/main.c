@@ -13,50 +13,42 @@ void DrawMainGraph(HWND hWnd, HDC hdc, int print)
     char** Anames = getNames(MATRIX_MAX);
     int** A = createMatrixPreset(k, MATRIX_MAX);
     int** Acoords = graphCoords(400, MATRIX_MAX);
-    int** Wt = matrixWt(MATRIX_MAX, A, randm(MATRIX_MAX));
-    int** Tr = TringlBool(MATRIX_MAX);
-    int** B = (int**)malloc(MATRIX_MAX * sizeof(int*));
-    int** D = (int**)malloc(MATRIX_MAX * sizeof(int*));
-    int** C = (int**)malloc(MATRIX_MAX * sizeof(int*));
-    for(int i = 0; i < MATRIX_MAX; i++){
-        B[i] = (int*)malloc(MATRIX_MAX * sizeof(int));
-        for(int l = 0; l < MATRIX_MAX; l++){
-            B[i][l] = Wt[i][l] == 0 ? 0 : 1;
-        }
-    }
-    for(int i = 0; i < MATRIX_MAX; i++){
-        C[i] = (int*)malloc(MATRIX_MAX * sizeof(int));
-        for(int l = 0; l < MATRIX_MAX; l++){
-            C[i][l] = B[i][l] == B[l][i] ? 0 : 1;
-        }
-    }
-    for(int i = 0; i < MATRIX_MAX; i++){
-        D[i] = (int*)malloc(MATRIX_MAX * sizeof(int));
-        for(int l = 0; l < MATRIX_MAX; l++){
-            D[i][l] = (B[i][l] == B[l][i] && B[i][l] == 1) ? 1 : 0;
-        }
-    }    
+
+    int** W = CountW(A, MATRIX_MAX);
 
     A = symMatrix(A, MATRIX_MAX);
     DrawGraph(hWnd, hdc, A, Acoords, MATRIX_MAX, 0, Anames);
 
-    int** W = multelMatrix(D, Tr, MATRIX_MAX);
-    W = addMatirx(C, W, MATRIX_MAX);
-    W = multelMatrix(W, Wt, MATRIX_MAX);
-    W = symelMatrix(W, MATRIX_MAX);
+    Node* list = (Node*)(malloc(MATRIX_MAX * sizeof(Node)));
 
-    printf("\n\n");
-    printMatrix(A, MATRIX_MAX);
+    Node node_ta;
+    int* ws = (int*)malloc(MATRIX_MAX * sizeof(int));
+    int* links = (int*)malloc(MATRIX_MAX * sizeof(int));
+    char str[8];
+    for(int i = 0; i < MATRIX_MAX; i++){
+        for(int l = 0; l < MATRIX_MAX; l++){
+            ws[l] = W[i][l];
+            links[l] = A[i][l];
+        }
+        node_ta.key = i;
+        node_ta.links = links;
+        node_ta.ws = ws;
+        if(i > 8){
+            sprintf(node_ta.name, "%d", i+1);
+        }else{
+            sprintf(node_ta.name, "0%d", i+1);
+        }
+        list[i] = node_ta;
+    }
 
-    struct test s;
-    s.data = 2;
-    strcpy(s.name, "test");
-    printf("%s | %d", s.name, s.data);
+    for(int i = 0; i < MATRIX_MAX; i++){
+        printf("%s\n", list[i].name);
+    }
 
-    free(B);
-    free(D);
-    free(C);
-    free(Wt);
+    Graph gr = { MATRIX_MAX, list };
+
+    // DrawGraph(hWnd, hdc, gr, 0); todo
+
     free(A);
     free(W);
     free(Anames);

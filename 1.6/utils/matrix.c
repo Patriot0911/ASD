@@ -6,15 +6,6 @@ void PrintSingleMatrix(int* A){
     printf("}");
 }
 
-int PutToEnd(int* stack, int N, int a){
-    for(int i = 0; i < N; i++){
-        if(stack[i] == -1){
-            stack[i] = a;
-            return i;
-        }
-    }
-    return -1;
-}
 
 int** matrixWt(int N, int** A, float** T){
     int** Wt = (int**)malloc(N * sizeof(int*));
@@ -131,6 +122,43 @@ int** symelMatrix(int** A, int N){
         printf("\n");
     }
     return arr;
+}
+
+int** CountW(int** A, int N){
+    int** Wt = matrixWt(N, A, randm(MATRIX_MAX));
+    int** Tr = TringlBool(N);
+    int** B = (int**)malloc(N * sizeof(int*));
+    int** D = (int**)malloc(N * sizeof(int*));
+    int** C = (int**)malloc(N * sizeof(int*));
+    for(int i = 0; i < N; i++){
+        B[i] = (int*)malloc(N * sizeof(int));
+        for(int l = 0; l < N; l++){
+            B[i][l] = Wt[i][l] == 0 ? 0 : 1;
+        }
+    }
+    for(int i = 0; i < N; i++){
+        C[i] = (int*)malloc(N * sizeof(int));
+        for(int l = 0; l < N; l++){
+            C[i][l] = B[i][l] == B[l][i] ? 0 : 1;
+        }
+    }
+    for(int i = 0; i < N; i++){
+        D[i] = (int*)malloc(N * sizeof(int));
+        for(int l = 0; l < N; l++){
+            D[i][l] = (B[i][l] == B[l][i] && B[i][l] == 1) ? 1 : 0;
+        }
+    }
+
+    int** W = multelMatrix(D, Tr, MATRIX_MAX);
+    W = addMatirx(C, W, MATRIX_MAX);
+    W = multelMatrix(W, Wt, MATRIX_MAX);
+    W = symelMatrix(W, MATRIX_MAX);
+
+    free(B);
+    free(D);
+    free(C);
+    free(Wt);    
+    return W;
 }
 
 char** getNames(int N){

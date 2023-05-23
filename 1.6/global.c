@@ -15,7 +15,14 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HWND Button_matrix;
 
 
-struct test {
-    int data;
-    char name[32];
-};
+typedef struct Node {
+    int key;
+    char name[16];
+    int* links;
+    int* ws; // to add x and y. mb by array of two
+} Node;
+
+typedef struct Graph {
+    int nodes;
+    Node* list;
+} Graph;
