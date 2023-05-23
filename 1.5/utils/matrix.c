@@ -23,7 +23,7 @@ float** createMatrixPreset(float k, int N){
     for(int i = 0; i < N; i++){
         arr[i] = (float*)malloc(N * sizeof(float));
         for(int l = 0; l < N; l++){
-            arr[i][l] = ((float)rand()/(float)(RAND_MAX/2.0)*k < 1.0 ? 0 : 1);
+            arr[i][l] = ((float)rand()/(float)(RAND_MAX)*2.0*k < 1.0 ? 0 : 1);
         }
     }
     return arr;
