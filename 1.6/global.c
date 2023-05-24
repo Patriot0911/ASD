@@ -17,9 +17,11 @@ HWND Button_matrix;
 
 typedef struct Node {
     int key;
-    char name[16];
+    char name[2];
+    int x;
+    int y;
     int* links;
-    int* ws; // to add x and y. mb by array of two
+    int* ws;
 } Node;
 
 typedef struct Graph {

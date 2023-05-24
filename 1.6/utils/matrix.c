@@ -1,6 +1,6 @@
-void PrintSingleMatrix(int* A){
+void PrintSingleMatrix(int* A, int N){
     printf("{ ");
-    for(int i = 0; i < MATRIX_MAX; i++){
+    for(int i = 0; i < N; i++){
         printf("%d ", A[i]);
     }
     printf("}");
@@ -109,17 +109,12 @@ int** symelMatrix(int** A, int N){
     for(int i = 0; i < N; i++){
         arr[i] = (int*)malloc(N*sizeof(int));
         for(int k = 0; k < N; k++){
-            if(!A[i][k] && !A[k][i]){
-                arr[i][k] = 0;
-            }
-            if(!A[i][k] && A[k][i]){
+            if(A[i][k] == 0 && A[k][i] != 0){
                 arr[i][k] = A[k][i];
-            }else if(A[k][i] && !A[i][k]){
-                arr[i][k] = A[k][i];
+            }else{
+                arr[i][k] = A[i][k];
             }
-            printf("%d ", arr[i][k]);
         }
-        printf("\n");
     }
     return arr;
 }
@@ -189,4 +184,41 @@ int** graphCoords(float a, int N){
         }
     }
     return Acoords;
+}
+
+Node* createListBasedOn(int** A, int** W, int MATRIX_MAX){
+    Node* list = (Node*)(malloc(MATRIX_MAX * sizeof(Node)));
+    Node node_ta;
+    for(int i = 0; i < MATRIX_MAX; i++){
+        node_ta.links = (int*)malloc(MATRIX_MAX * sizeof(int));
+        node_ta.ws = (int*)malloc(MATRIX_MAX * sizeof(int));
+        for(int l = 0; l < MATRIX_MAX; l++){
+            node_ta.ws[l] = W[i][l];
+            node_ta.links[l] = A[i][l];
+        }
+        node_ta.key = i;
+        if(i > 8){
+            sprintf(node_ta.name, "%d", i+1);
+        }else{
+            sprintf(node_ta.name, "0%d", i+1);
+        }
+        list[i] = node_ta;
+    }
+    return list;
+}
+
+Node* addCoordsToList(Node* list, int N, float a){
+    float leng = a/(2*sin(180/(N-1)));
+    Node* nlist = (Node*)(malloc(N * sizeof(Node)));
+    for(int i = 0; i < N; i++){
+        nlist[i] = list[i];
+        if(i == 0){
+            nlist[i].x = startx; 
+            nlist[i].y = starty;
+            continue;
+        }
+        nlist[i].x = startx + leng * cos(2 * M_PI * i / (N-1));
+        nlist[i].y = starty + leng * sin(2 * M_PI * i / (N-1));
+    }
+    return nlist;
 }

@@ -64,38 +64,40 @@ void DrawLined(HWND hWnd, HDC hdc, float** A, int N, int begin, int end){
     free(Acoords);
 }
 
-void DrawGraph(HWND hWnd, HDC hdc, int** A, int** Acoords, int N, int dir, char** Anames){
+void DrawGraphGR(HWND hWnd, HDC hdc, Graph gr, int dir){
     HPEN BPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255));
     HPEN KPen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));
     float val = 92* M_PI /180;
     int dtx = 8;
+    Node* list = gr.list;
+    int N = gr.nodes;
     for(int l = 0; l < N; l++){
         for(int f = 0; f < N; f++){
-            if(A[l][f] == 1){
+            if(list[l].links[f] == 1){
                 SelectObject(hdc, KPen);
                 if(l == f){
-                    MoveToEx(hdc, Acoords[0][0], Acoords[0][1], NULL);
-                    Arc(hdc, Acoords[l][0], Acoords[l][1]-sradius*2, Acoords[l][0]+sradius*2, Acoords[f][1], Acoords[f][0], Acoords[f][1], Acoords[l][0], Acoords[l][1]);
+                    MoveToEx(hdc, list[0].x, list[0].y, NULL);
+                    Arc(hdc, list[l].x, list[l].y-sradius*2, list[l].x+sradius*2, list[f].y, list[f].x, list[f].y, list[l].x, list[l].y);                
                 }else{
                     if(dir == 1){
-                        if((A[f][l] == 1 && l < f)){
-                            MoveToEx(hdc, Acoords[l][0], Acoords[l][1], NULL);
-                            LineTo(hdc, (Acoords[f][0]+Acoords[l][0])/2-sradius, (Acoords[f][1]+Acoords[l][1])/2-sradius);
-                            LineTo(hdc, Acoords[f][0], Acoords[f][1]);
-                            val = (atan2((Acoords[f][1]-((Acoords[f][1]+Acoords[l][1])/2-sradius)), (Acoords[f][0]-((Acoords[f][0]+Acoords[l][0])/2-sradius))));
+                        if(list[f].links[l] == 1 && l < f){
+                            MoveToEx(hdc, list[l].x, list[l].y, NULL);
+                            LineTo(hdc, (list[f].x+list[l].x)/2-sradius, (list[f].y+list[l].y)/2-sradius);
+                            LineTo(hdc, list[f].x, list[f].y);
+                            val = (atan2((list[f].y-((list[f].y+list[l].y)/2-sradius)), (list[f].x-((list[f].x+list[l].x)/2-sradius))));
                         }else{
-                            MoveToEx(hdc, Acoords[l][0], Acoords[l][1], NULL);
-                            LineTo(hdc, Acoords[f][0], Acoords[f][1]);
-                            val = (atan2((Acoords[f][1]-Acoords[l][1]), (Acoords[f][0]-Acoords[l][0])));
+                            MoveToEx(hdc, list[l].x, list[l].y, NULL);
+                            LineTo(hdc, list[f].x, list[f].y);
+                            val = (atan2((list[f].y-list[l].y), (list[f].x-list[l].x)));
                         }
                     }else if(dir == 0){
-                        MoveToEx(hdc, Acoords[l][0], Acoords[l][1], NULL);
-                        LineTo(hdc, Acoords[f][0], Acoords[f][1]);
+                        MoveToEx(hdc, list[l].x, list[l].y, NULL);
+                        LineTo(hdc, list[f].x, list[f].y);
                     }
                 }
                 if(dir == 1){
                     SelectObject(hdc, BPen);
-                    arrow(val, (int)(Acoords[f][0]-sradius*cos(val)), (int)(Acoords[f][1]-sradius*sin(val)), hdc);
+                    arrow(val, (int)(list[f].x-sradius*cos(val)), (int)(list[f].y-sradius*sin(val)), hdc);
                     val = 92*M_PI/180;
                 }
             }
@@ -104,8 +106,9 @@ void DrawGraph(HWND hWnd, HDC hdc, int** A, int** Acoords, int N, int dir, char*
 
     SelectObject(hdc, BPen);
     for(int l = 0; l < N; l++){
-        MoveToEx(hdc, Acoords[l][0], Acoords[l][1], NULL);
-        Ellipse(hdc, Acoords[l][0]-sradius, Acoords[l][1]-sradius, Acoords[l][0]+sradius, Acoords[l][1]+sradius);
-        TextOut(hdc, Acoords[l][0]-dtx, Acoords[l][1]-sradius/2, Anames[l], 2);
+        MoveToEx(hdc, list[l].x, list[l].y, NULL);
+        Ellipse(hdc, list[l].x-sradius, list[l].y-sradius, list[l].x+sradius, list[l].y+sradius);
+        TextOut(hdc, list[l].x-dtx, list[l].y-sradius/2, list[l].name, 2);
     }
+    free(list);
 }
