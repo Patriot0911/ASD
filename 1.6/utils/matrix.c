@@ -1,11 +1,10 @@
-void PrintSingleMatrix(int* A, int N){
+void PrintSingleMatrix(int* A, int N, int plus){
     printf("{ ");
     for(int i = 0; i < N; i++){
-        printf("%d ", A[i]);
+        printf("%d ", A[i]+plus);
     }
     printf("}");
 }
-
 
 int** matrixWt(int N, int** A, float** T){
     int** Wt = (int**)malloc(N * sizeof(int*));
@@ -17,7 +16,6 @@ int** matrixWt(int N, int** A, float** T){
     }
     return Wt;
 }
-
 
 int** addMatirx(int** A, int** B, int N){
     int** arr = (int**)malloc(N * sizeof(int*));
@@ -156,69 +154,12 @@ int** CountW(int** A, int N){
     return W;
 }
 
-char** getNames(int N){
-    char **Anames = (char**)malloc(N * sizeof(char*));
-    for(int l = 0; l < N; l++){
-        Anames[l] = (char*)malloc(2 * sizeof(char));
-        if(l < 9){
-            sprintf(Anames[l], "0%d", l+1);
-        }else{
-            sprintf(Anames[l], "%d", l+1);
-        }
-    }
-    return Anames;
-}
-
-int** graphCoords(float a, int N){
-    int** Acoords = (int**)malloc(N * sizeof(int*));
-    float leng = a/(2*sin(180/(N-1)));
-
-    for(int l = 0; l < N; l++){
-        Acoords[l] = (int*)malloc(2 * sizeof(int));
-        if(l == 0){
-            Acoords[l][0] = startx;
-            Acoords[l][1] = starty;
-        }else{
-            Acoords[l][0] = startx + leng * cos(2 * M_PI * l / (N-1));
-            Acoords[l][1] = starty + leng * sin(2 * M_PI * l / (N-1));
-        }
-    }
-    return Acoords;
-}
-
-Node* createListBasedOn(int** A, int** W, int MATRIX_MAX){
-    Node* list = (Node*)(malloc(MATRIX_MAX * sizeof(Node)));
-    Node node_ta;
-    for(int i = 0; i < MATRIX_MAX; i++){
-        node_ta.links = (int*)malloc(MATRIX_MAX * sizeof(int));
-        node_ta.ws = (int*)malloc(MATRIX_MAX * sizeof(int));
-        for(int l = 0; l < MATRIX_MAX; l++){
-            node_ta.ws[l] = W[i][l];
-            node_ta.links[l] = A[i][l];
-        }
-        node_ta.key = i;
-        if(i > 8){
-            sprintf(node_ta.name, "%d", i+1);
-        }else{
-            sprintf(node_ta.name, "0%d", i+1);
-        }
-        list[i] = node_ta;
-    }
-    return list;
-}
-
-Node* addCoordsToList(Node* list, int N, float a){
-    float leng = a/(2*sin(180/(N-1)));
-    Node* nlist = (Node*)(malloc(N * sizeof(Node)));
+int PutToEnd(int* stack, int N, int a){
     for(int i = 0; i < N; i++){
-        nlist[i] = list[i];
-        if(i == 0){
-            nlist[i].x = startx; 
-            nlist[i].y = starty;
-            continue;
+        if(stack[i] == -1){
+            stack[i] = a;
+            return i;
         }
-        nlist[i].x = startx + leng * cos(2 * M_PI * i / (N-1));
-        nlist[i].y = starty + leng * sin(2 * M_PI * i / (N-1));
     }
-    return nlist;
+    return -1;
 }

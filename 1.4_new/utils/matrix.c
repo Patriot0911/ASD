@@ -322,6 +322,49 @@ void ReverseDFS(int v, int N, int num_components, float** Rarr) {
     }
 }
 
+int PutToEnd(int* stack, int N, int a){
+    for(int i = 0; i < N; i++){
+        if(stack[i] == -1){
+            stack[i] = a;
+            return i;
+        }
+    }
+    return -1;
+}
+
+int couldGo(int begin, int end, float** A, int N){
+    int* visited = (int*)malloc(N*sizeof(int));
+    int* s_stack = (int*)malloc(N*sizeof(int));
+    for(int i = 0; i < N; i++){
+        visited[i] = 0;
+        s_stack[i] = -1;
+    }
+    s_stack[0] = begin;
+    visited[begin] = 1;
+    for(int l = 0; l < N; l++){
+        if(A[begin][l] && !visited[l]){
+            if(l == end){
+                return 1;
+            }
+            visited[l] = 1;
+            PutToEnd(s_stack, N, l);
+        }
+    }
+    for(int k = 0; k < N; k++){
+        if(s_stack[k] == -1) break;
+        for(int l = 0; l < N; l++){
+            if(A[s_stack[k]][l] && !visited[l]){
+                if(l == end){
+                    return 1;
+                }
+                visited[l] = 1;
+                PutToEnd(s_stack, N, l);
+            }
+        }
+    }
+    return 0;
+}
+
 int stronglyConnected(HWND hWnd, HDC hdc, float** A, int N) {
     float** Rarr = CreateReachabilityMatrix(A, N);
     int  num_components = 0,
@@ -351,12 +394,31 @@ int stronglyConnected(HWND hWnd, HDC hdc, float** A, int N) {
             num_components++;
         }
     }
+    int** ccoords = graphCoords(200, num_components+1);
     printf("The strongly connected components of the graph are:\n");
+    char str[1];
     for(int i = 0; i < num_components; i++) {
-        printf("{ ");
+        ccoords[i][0] += 500;
+        Ellipse(hdc, ccoords[i][0]-sradius+(i+1)*4, ccoords[i][1]-sradius+(i+1)*4, ccoords[i][0]+sradius-(i+1)*4, ccoords[i][1]+sradius-(i+1)*4);
+        sprintf(str, "%d", i+1);
+        TextOut(hdc, ccoords[i][0]-8, ccoords[i][1]-sradius/3, str, 1);
+        printf("%d: { ", num_components);
         for(int j = 0; j < N; j++) {
             if(components[j] == i) {
                 printf("%d ", j+1);
+                for(int f = 0; f < N; f++){
+                    if(i != j && components[i] != components[j]){
+                        if(!couldGo(j, f, A, N)){
+                            if(couldGo(f, j, A, N)){
+                                MoveToEx(hdc, ccoords[components[f]][0], ccoords[components[f]][1], NULL);
+                                LineTo(hdc, ccoords[components[j]][0], ccoords[components[j]][1]);
+                            }
+                        }else{
+                            MoveToEx(hdc, ccoords[components[j]][0], ccoords[components[j]][1], NULL);
+                            LineTo(hdc, ccoords[components[f]][0], ccoords[components[f]][1]);
+                        }
+                    }
+                }
             }
         }
         printf("}\n");
