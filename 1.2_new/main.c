@@ -46,7 +46,7 @@ int main() {
     }
     printAll(cur);
     for(int i = 0, t = count-1; i < count/2; i++, t--){
-        sum += getdata(cur, i) + getdata(cur, t);
+        sum += getdata(cur, i) * getdata(cur, t);
     }
     if((int)(count%2) == 1){
         sum += getdata(cur, roundf(count/2));
